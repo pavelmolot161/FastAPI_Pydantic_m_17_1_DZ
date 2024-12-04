@@ -1,4 +1,4 @@
-### - 2,3,4 занятие
+### - 2,3,4 занятие.
 from app.backend.db import Base
 from sqlalchemy import Column, ForeignKey, Integer, String, Boolean, Float, ForeignKey
 from sqlalchemy.orm import relationship
@@ -10,7 +10,7 @@ class Task(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     content = Column(String)
-    priority = Column(Integer, default=0)            ### - по умолчанию 0
+    priority = Column(Integer, default=0)            ### - по умолчанию 0..
     completed = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False, index=True)
     slug = Column(String, unique=True, index=True)   ### - уникальная строка с индексом
