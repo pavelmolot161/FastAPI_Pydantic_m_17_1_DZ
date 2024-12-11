@@ -14,8 +14,8 @@ class User(Base):
     lastname = Column(String)
     age = Column(Integer)
     slug = Column(String, unique=True, index=True)                    ### - уникальная строка с индексом
-    category = relationship('Task', back_populates='user')   ### - объект связи с таблицей Task
+    tasks = relationship('Task', back_populates='user')   ### - объект связи с таблицей Task
                                                                        ## связывает сущности между собой 1 - 1
 
-# from sqlalchemy.schema import CreateTable
-# print(CreateTable(User.__table__))
+from sqlalchemy.schema import CreateTable
+print(CreateTable(User.__table__))
