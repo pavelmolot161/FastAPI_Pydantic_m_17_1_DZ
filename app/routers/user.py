@@ -26,9 +26,10 @@ router = APIRouter(
 #_____________________________________________________________________________________________________________
 @router.get("/")
 async def all_users(db: Annotated[Session, Depends(get_db)]):
-    users = db.scalars(select(User).all())                               ### - Вставил all через жолтую лампочку
+    users = db.execute(select(User)).scalars().all()                     ### - Вставил all через жолтую лампочку
     return users
-
+'''      Функция all_users: 
+Изменена для использования db.scalars(select(User)).all(), что соответствует требованиям.'''
 #_____________________________________________________________________________________________________________
 
 @router.get("/user_id")
@@ -39,10 +40,7 @@ async def user_by_id(user_id: int, db: Annotated[Session, Depends(get_db)]):
                             detail="User was not found (1)")             ### - Исключение, если пользователь не найден
     return user
 
-'''   Функция all_users: 
-Изменена для использования db.scalars(select(User)).all(), что соответствует требованиям.
-
-      Функция user_by_id: 
+'''      Функция user_by_id: 
 Добавлена для извлечения пользователя по user_id. Если пользователь не найден, выбрасывается 
 исключение с кодом 404 и соответствующим сообщением.'''
 #_____________________________________________________________________________________________________________
@@ -64,7 +62,7 @@ async def create_user(db: Annotated[Session, Depends(get_db)], create_user: Crea
                                    slug=slug))
     db.commit()
 
-    return create_user  ### - Возвращаем созданного пользователя
+    return create_user                                  ### - Возвращаем созданного пользователя
 
 #_____________________________________________________________________________________________________________
 
@@ -72,7 +70,7 @@ async def create_user(db: Annotated[Session, Depends(get_db)], create_user: Crea
 async def update_user(
         db: Annotated[Session, Depends(get_db)],
         id: int,
-        user_data: UpdateUser                                  ### -  Добавлен параметр для получения данных обновления
+        user_data: UpdateUser                           ### -  Добавлен параметр для получения данных обновления
 ):
     user = db.scalars(select(User).where(User.id == id)).first()
     if user is None:
@@ -89,7 +87,7 @@ async def update_user(
     ))
     db.commit()
 
-    # return {                                                   ### - КАК ЕГО ЗАПУСТИТЬ
+    # return {                                                   ### - КАК ЕГО ЗАПУСТИТЬ --- ???
     #     'status_code': status.HTTP_200_OK,
     #     'transaction': "User update is successful (4)!"
     # }
@@ -113,98 +111,8 @@ async def delete_user(id: int, db: Annotated[Session, Depends(get_db)]):
             detail="User was not found (5)"
         )
 
-    db.delete(user)      ### - Удаление пользователя
+    db.delete(user)                                              ### - Удаление пользователя
     db.commit()
     return user
 
 ###-________________________________________________________________________________________________________________
-
-
-####################################################################################################################
-
-# from sqlalchemy import update
-#
-# @router.delete("/{category_id}")
-# async def delete_category(db: Annotated[Session, Depends(get_db)], category_id: int):
-#     category = db.scalar(select(Category).where(Category.id == category_id))
-#     if category is None:
-#         raise HTTPException(
-#             status_code=status.HTTP_404_NOT_FOUND,
-#             detail="There is no Category found (4)"
-#         )
-#     db.execute(update(Category).where(Category.id == category_id).values(is_active=False))
-#     db.commit()
-#     return {
-#         'status_code': status.HTTP_200_OK,
-#         'transaction': "Category delite is Successful (4)"
-#     }
-####################################################################################################################
-
-
-
-
-
-
-
-# products = [{'id': 1, 'name': "Laptop", 'category_id': 1}, {'id': 2, "name": "Book", 'category_id': 2}]   ### - фейковые данные
-#
-#
-# # @router.get("/")                                                   ### - было до 05.12.24
-# # async def all_products():
-# #     pass
-#
-# # @router.get("/", response_model=list[Product])
-# @router.get("/", response_model=list[Product])
-# async def get_all_products():
-#     return products
-#
-# # @router.post("/create")                                             ### - было до 05.12.24
-# # async def create_product():
-# #     pass
-#
-# @router.post("/", response_model=Product)
-# def create_product(product: ProductCreate):
-#     """Создать продукт"""
-#     new_product = {"id": len(products) + 1, "name": product.name, "category_id": product.category_id}
-#     products.append(new_product)
-#     return new_product
-#
-# @router.get("/{all_products_slug}")
-# async def product_by_category():
-#     pass
-#
-# @router.get("/detail/{product_slug}")
-# async def product_detail():
-#     pass
-#
-# # @router.put("/detail/{product_slug}")                                ### - было до 05.12.24
-# # async def update_product():
-# #     pass
-#
-# @router.put("/{product_id}", response_model=Product)
-# def update_product(product_id: int, product: ProductCreate):
-#     """Обновить продукт"""
-#     for prod in products:
-#         if prod["id"] == product_id:
-#             prod["name"] = product.name
-#             prod["category_id"] = product.category_id
-#             return prod
-#     raise HTTPException(status_code=404, detail="Product not found")
-#
-# # @router.delete("/delete")                                             ### - было до 05.12.24
-# # async def delete_product():
-# #     pass
-#
-# @router.delete("/{product_id}")
-# def delete_product(product_id: int):
-#     """Удалить продукт"""
-#     global products
-#     products = [prod for prod in products if prod["id"] != product_id]
-#     return {"message": "Product deleted"}
-
-'''Пояснения к коду:
-1 - Фейковые данные: Продукты представлены как список словарей.
-2 - Логика обновления: Ищем продукт по id, если не найдено — возвращаем ошибку 404'''
-
-
-#

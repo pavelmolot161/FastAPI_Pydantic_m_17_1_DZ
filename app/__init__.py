@@ -6,7 +6,7 @@
 #                                         2) - (.venv) PS D:\FastAPI_Pydantic_m_17> >>> fastapi dev app
 
 ### - FastAPI_Pydantic_m_17_1_DZ
-### - 09.11.24
+### - 04.11.24
 ### - Установка - >>> pip install uvicorn
 ### - Переход в cd app вот так - (.venv) PS D:\FastAPI_Pydantic_m_17> >>> cd app
 ### - Выход на один путь назад - (.venv) PS D:\FastAPI_Pydantic_m_17\app> >>> cd ../
